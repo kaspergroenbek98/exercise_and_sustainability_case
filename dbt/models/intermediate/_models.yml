@@ -28,3 +28,27 @@ models:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: [area_code, year]
+
+  - name: int_personal_day_matched_country
+    description: >
+      One row per personal activity day. Finds the (country, year) whose
+      kcal_per_capita_per_day is closest to that day's calories burned, via
+      ROW_NUMBER over a cross join. Returns the match identification columns
+      only — country, year, supply, kcal diff. Diet composition columns are not
+      surfaced (lean scope).
+    columns:
+      - name: activity_date
+        description: Personal activity date.
+        data_tests:
+          - unique
+          - not_null
+      - name: closest_country_name
+        description: Country name of the closest match.
+      - name: closest_year
+        description: Year of the closest match.
+        data_tests:
+          - not_null
+      - name: closest_kcal_per_capita_per_day
+        description: National kcal/cap/day for the matched (country, year).
+      - name: kcal_diff
+        description: Absolute kcal difference between the personal day's burn and the matched country-year's supply.
