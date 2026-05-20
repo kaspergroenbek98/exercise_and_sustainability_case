@@ -3,11 +3,14 @@
 **Scaled to humanity, is the calorie demand of my (semi, who am I kidding...) active lifestyle compatible with the world's actual food
 supply?**
 
-> **My motivation:** A Fitbit user's daily calorie burn frequently exceeds 1.25x the world's
-> population-weighted food supply per person. On those days, the model labels the
-> developer `globally_unsustainable` by their own classification. Across ~600-700
-> days where I have worn a FitBit Charge 6 on my body, X% will land in that class.
-> Scale that pattern to eight billion people and there may not be enough food.
+> **My motivation:** If my daily calorie burn often exceeds 1.25x the world’s
+> population-weighted food supply per person, that points to a problem.
+> On those days, the model classifies the developer as `globally_unsustainable`
+> under its own criteria.
+> Across the roughly 600 to 700 days I have worn a FitBit Charge 6, X% of days
+> fall into that class.
+> If that pattern were scaled to eight billion people, the global food supply
+> may not be sufficient.
 
 The 1.25x threshold is a design choice rather than an established rule.
 
