@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: fct_world_kcal_supply
+    description: >
+      Country-year fact. One row per (country_name, year) with kcal/capita/day
+      and population. The thin world-side mart used by the slide that shows the
+      global supply curve.
+    columns:
+      - name: country_name
+        description: Country name from FAOSTAT.
+        data_tests:
+          - not_null
+      - name: year
+        description: Calendar year, 2010-2023.
+        data_tests:
+          - not_null
+      - name: kcal_per_capita_per_day
+        description: Daily per-capita food supply, kcal.
+      - name: population
+        description: Population in 1000 persons.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [country_name, year]
+
+  - name: fct_personal_vs_world
+    description: >
+      Personal-day fact. One row per activity_date with raw metrics, the
+      closest-matching country-year by kcal, the world baseline, and the
+      sustainability classification.
+    columns:
+      - name: activity_date
+        description: Local-time date the metrics roll up to. Grain of the mart.
+        data_tests:
+          - unique
+          - not_null
+      - name: day_of_week
+        description: Three-letter day-of-week abbreviation (Mon, Tue, ...). Carried for the weekend-vs-weekday breakdown.
+      - name: calories_burned_kcal
+        description: Total energy expenditure for the day, kcal. Source for every comparison column.
+      - name: steps
+        description: Daily step count.
+      - name: distance_meters
+        description: Movement distance, metres.
+      - name: active_zone_minutes
+        description: Fitbit Active Zone Minutes.
+      - name: closest_country_name
+        description: "{{ doc('closest_country_match') }} Country name of the matched country-year."
+      - name: closest_year
+        description: Year of the matched country-year.
+      - name: closest_kcal_per_capita_per_day
+        description: National kcal/capita/day of the matched country-year.
+      - name: kcal_diff_vs_closest_country
+        description: Absolute difference between calories_burned_kcal and closest_kcal_per_capita_per_day.
+      - name: baseline_year
+        description: Year used for the world baseline (latest year in int_world_kcal_baseline).
+      - name: world_avg_kcal_per_capita_per_day
+        description: Population-weighted world average kcal/cap/day for baseline_year.
+      - name: kcal_excess_vs_world
+        description: calories_burned_kcal minus world_avg_kcal_per_capita_per_day. Positive when the day's burn exceeds world average.
+      - name: world_equivalent_persons
+        description: calories_burned_kcal / world_avg_kcal_per_capita_per_day. Reads as "today you would have consumed the food supply of X world-average people."
+      - name: world_sustainability_class
+        description: "{{ doc('sustainability_class') }}"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [within_world_avg, above_world_avg, globally_unsustainable, unknown]

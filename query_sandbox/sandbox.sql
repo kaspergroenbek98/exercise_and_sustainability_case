@@ -1,2 +1,0 @@
-select *
-from RAW.FAOSTAT.FOOD_BALANCE_SHEETS;
