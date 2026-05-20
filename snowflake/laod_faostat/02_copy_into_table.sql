@@ -11,6 +11,7 @@ create or replace table food_balance_sheets (
     area_code_m49      varchar,
     area               varchar,
     item_code          number,
+    item_code_fsb      varchar,
     item               varchar,
     element_code       number,
     element            varchar,
@@ -23,10 +24,12 @@ create or replace table food_balance_sheets (
 )
     comment = 'FAOSTAT Food Balance Sheets, long format. Loaded once from bulk CSV. Staging filters to elements 664 (kcal supply) and 511 (population) at item 2901 (Grand Total).';
 
-copy into food_balance_sheets (area_code, area_code_m49, area, item_code, item, element_code, element, year_code, year, unit, value, flag, note)
+
+copy into raw.faostat.food_balance_sheets
 from @faostat_stage
-file_format = (format_name = faostat_csv_format)
-on_error    = 'continue';
+pattern = '.*fbs_chunk.*\.csv'
+file_format = (type = 'CSV' field_optionally_enclosed_by = '"' skip_header = 1 encoding = 'UTF8')
+on_error = 'CONTINUE';
 
 -- Sanity checks
 select count(*)                              as total_rows                            from food_balance_sheets;
