@@ -52,3 +52,19 @@ models:
         description: National kcal/cap/day for the matched (country, year).
       - name: kcal_diff
         description: Absolute kcal difference between the personal day's burn and the matched country-year's supply.
+
+  - name: int_world_kcal_baseline
+    description: >
+      Single-row table. World population-weighted average kcal/capita/day,
+      pinned to the latest year for which both kcal and population are
+      available across enough countries. Read by the personal mart as a
+      cross-joined reference value.
+    columns:
+      - name: baseline_year
+        description: The year the baseline was pinned to.
+        data_tests:
+          - not_null
+      - name: world_avg_kcal_per_capita_per_day
+        description: Population-weighted mean kcal/cap/day across all countries with both data points in baseline_year.
+        data_tests:
+          - not_null
