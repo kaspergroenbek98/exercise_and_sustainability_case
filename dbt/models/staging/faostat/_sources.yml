@@ -1,0 +1,40 @@
+version: 2
+
+sources:
+  - name: faostat
+    description: >
+      FAO Food Balance Sheets, loaded once from the bulk CSV via a Snowflake internal
+      stage. Long-format: one row per (area, item, element, year). The staging layer
+      filters to the two elements the project uses (664 kcal supply, 511 population)
+      at item 2901 (Grand Total). Not refreshed on a schedule; the load is one-off.
+    database: RAW
+    schema:   FAOSTAT
+    tables:
+      - name: food_balance_sheets
+        identifier: FOOD_BALANCE_SHEETS
+        description: >
+          FAOSTAT Food Balance Sheets, ~4.8M rows covering 2010-2023. Filtered down
+          to ~5,600 rows in staging.
+        columns:
+          - name: area_code
+            description: FAO numeric area code. Joinable to seeds/faostat_area_exclusions.csv.
+          - name: area_code_m49
+            description: UN M49 numeric code, prefixed with an apostrophe in the source CSV (e.g. `'004`). Staging strips it.
+          - name: area
+            description: Country or aggregate name as published by FAOSTAT.
+          - name: item_code
+            description: FAO item code. Project uses only 2901 (Grand Total) downstream.
+          - name: item
+            description: Human-readable item name.
+          - name: element_code
+            description: FAO element code. Staging filters to 664 (Food supply, kcal/cap/day) and 511 (Population).
+          - name: element
+            description: Human-readable element name.
+          - name: year
+            description: Calendar year, 2010-2023.
+          - name: unit
+            description: Unit of measurement for the value (kcal/capita/day, 1000 persons, etc.).
+          - name: value
+            description: Numeric measurement for the row. Null when FAOSTAT didn't publish.
+          - name: flag
+            description: FAOSTAT data quality flag (E=estimated, I=imputed, X=external, blank=direct national report).
