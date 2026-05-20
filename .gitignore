@@ -1,4 +1,1 @@
-# Ignore dbt artifacts
-target/
-dbt_modules/
-logs/
+query_sandbox/
