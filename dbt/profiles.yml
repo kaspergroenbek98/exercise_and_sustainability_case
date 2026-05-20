@@ -1,0 +1,10 @@
+dbt:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      role: PC_DBT_ROLE
+      warehouse: TRANSFORM_WH
+      database: ANALYTICS_DEV
+      schema: PUBLIC
+      threads: 8
