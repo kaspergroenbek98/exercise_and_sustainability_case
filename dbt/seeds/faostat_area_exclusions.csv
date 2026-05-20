@@ -1,0 +1,21 @@
+faostat_area_code,faostat_area_name,reason
+5000,World,World aggregate
+5100,Africa,Continental aggregate
+5101,Eastern Africa,Sub-continental aggregate
+5102,Middle Africa,Sub-continental aggregate
+5103,Northern Africa,Sub-continental aggregate
+5104,Southern Africa,Sub-continental aggregate
+5105,Western Africa,Sub-continental aggregate
+5200,Americas,Continental aggregate
+5203,Northern America,Sub-continental aggregate
+5204,Caribbean,Sub-continental aggregate
+5206,Central America,Sub-continental aggregate
+5207,South America,Sub-continental aggregate
+5300,Asia,Continental aggregate
+5400,Europe,Continental aggregate
+5401,European Union (27),Political-economic aggregate (overlaps members)
+5500,Oceania,Continental aggregate
+5707,Least Developed Countries,Development-status aggregate
+5803,Low Income Food Deficit Countries,Development-status aggregate
+5815,Net Food Importing Developing Countries,Development-status aggregate
+351,China,Aggregate of mainland + Taiwan + Hong Kong + Macau; mainland is area 41

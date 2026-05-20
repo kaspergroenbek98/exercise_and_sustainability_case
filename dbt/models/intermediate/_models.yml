@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: int_country_year_kcal_supply
+    description: >
+      One row per (area_code, country_name, year) with the two FAOSTAT numbers
+      pivoted wide: kcal_per_capita_per_day and population. Aggregates (World,
+      continents, etc.) filtered out via the faostat_area_exclusions seed.
+      Inteded to feed other intermediate models.
+    columns:
+      - name: area_code
+        description: FAO numeric area code. Used as the country key downstream.
+        data_tests:
+          - not_null
+      - name: country_name
+        description: Country name from FAOSTAT.
+        data_tests:
+          - not_null
+      - name: year
+        description: Calendar year, 2010-2023.
+        data_tests:
+          - not_null
+      - name: kcal_per_capita_per_day
+        description: Daily per-capita food supply in kcal. Source-of-truth for the world supply baseline.
+      - name: population
+        description: Total population in 1000 persons. Used as weight in int_world_kcal_baseline.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [area_code, year]
+
+  - name: int_personal_day_matched_country
+    description: >
+      One row per personal activity day. Finds the (country, year) whose
+      kcal_per_capita_per_day is closest to that day's calories burned, via
+      ROW_NUMBER over a cross join. Returns the match identification columns
+      only — country, year, supply, kcal diff. Diet composition columns are not
+      surfaced (lean scope).
+    columns:
+      - name: activity_date
+        description: Personal activity date.
+        data_tests:
+          - unique
+          - not_null
+      - name: closest_country_name
+        description: Country name of the closest match.
+      - name: closest_year
+        description: Year of the closest match.
+        data_tests:
+          - not_null
+      - name: closest_kcal_per_capita_per_day
+        description: National kcal/cap/day for the matched (country, year).
+      - name: kcal_diff
+        description: Absolute kcal difference between the personal day's burn and the matched country-year's supply.
+
+  - name: int_world_kcal_baseline
+    description: >
+      Single-row table. World population-weighted average kcal/capita/day,
+      pinned to the latest year for which both kcal and population are
+      available across enough countries. Read by the personal mart as a
+      cross-joined reference value.
+    columns:
+      - name: baseline_year
+        description: The year the baseline was pinned to.
+        data_tests:
+          - not_null
+      - name: world_avg_kcal_per_capita_per_day
+        description: Population-weighted mean kcal/cap/day across all countries with both data points in baseline_year.
+        data_tests:
+          - not_null
