@@ -1,0 +1,5 @@
+CREATE OR REPLACE API INTEGRATION git_api_integration
+  API_PROVIDER = git_https_api
+  API_ALLOWED_PREFIXES = ('https://github.com/kaspergroenbek98')
+  API_USER_AUTHENTICATION = (TYPE = SNOWFLAKE_GITHUB_APP)
+  ENABLED = TRUE;
