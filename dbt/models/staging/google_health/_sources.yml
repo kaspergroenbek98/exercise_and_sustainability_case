@@ -1,0 +1,36 @@
+version: 2
+
+sources:
+  - name: google_health
+    description: >
+      Personal daily activity from a Fitbit Charge 6 via Google Health API v4.
+      Loaded by loaders/google_health/load_daily_activity.py on a daily schedule
+      (Windows Task Scheduler). MERGEd on (activity_date, source_family) for
+      idempotency.
+
+      Source freshness is intentionally not wired in this build (dbt Fusion
+      preview rejected the documented config-block syntax). Documented in
+      docs/04-trade-offs.md as a "with more time" follow-up.
+    database: RAW
+    schema:   GOOGLE_HEALTH
+    tables:
+      - name: daily_activity
+        identifier: DAILY_ACTIVITY
+        description: >
+          One row per (activity_date, source_family). Calories burned (total),
+          steps, distance, and active zone minutes.
+        columns:
+          - name: activity_date
+            description: Local-time (Europe/Copenhagen) date the metrics roll up to.
+          - name: source_family
+            description: Source family label (e.g. google-wearables-fitbit). Carries forward to allow future multi-device or multi-user separation.
+          - name: calories_burned_kcal
+            description: Total energy expenditure for the day (basal + active), kcal.
+          - name: steps
+            description: Daily step count.
+          - name: distance_meters
+            description: Movement distance for the day, metres.
+          - name: active_zone_minutes
+            description: Fitbit Active Zone Minutes (intensity-weighted). Google Health doesn't expose a plain "active minutes" data type.
+          - name: ingested_at
+            description: Snowflake server timestamp at which the row was last upserted. Surfaces freshness once wired.
