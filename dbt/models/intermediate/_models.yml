@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: int_country_year_kcal_supply
+    description: >
+      One row per (area_code, country_name, year) with the two FAOSTAT numbers
+      pivoted wide: kcal_per_capita_per_day and population. Aggregates (World,
+      continents, etc.) filtered out via the faostat_area_exclusions seed.
+      Inteded to feed other intermediate models.
+    columns:
+      - name: area_code
+        description: FAO numeric area code. Used as the country key downstream.
+        data_tests:
+          - not_null
+      - name: country_name
+        description: Country name from FAOSTAT.
+        data_tests:
+          - not_null
+      - name: year
+        description: Calendar year, 2010-2023.
+        data_tests:
+          - not_null
+      - name: kcal_per_capita_per_day
+        description: Daily per-capita food supply in kcal. Source-of-truth for the world supply baseline.
+      - name: population
+        description: Total population in 1000 persons. Used as weight in int_world_kcal_baseline.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [area_code, year]
