@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_google_health__daily_activity
+    description: >
+      Personal daily activity passed through with type casts. One row per
+      activity_date (source_family deduplication handled by the MERGE in the
+      loader). Drives the personal track of following layers.
+    columns:
+      - name: activity_date
+        description: Natural key - Specific date the metrics roll up to.
+        data_tests:
+          - unique
+          - not_null
+      - name: source_family
+        description: Source family label.
+        data_tests:
+          - not_null
+      - name: calories_burned_kcal
+        description: Total energy expenditure for the day, kcal.
+      - name: steps
+        description: Daily step count.
+      - name: distance_meters
+        description: Movement distance for the day, metres.
+      - name: active_zone_minutes
+        description: > 
+          Fitbit Active Zone Minutes:
+          A weighted metric for activity minutes in heartrate zones.
+          * Moderate counts 1x minutes in that zone
+          * Vigourous counts 2x minutes in that zone
+          etc.
