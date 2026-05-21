@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      DBT_PROFILES_DIR: ${{ github.workspace }}/.dbt-profiles
 
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +26,7 @@ jobs:
 
       - name: Write profiles.yml
         run: |
-          mkdir -p $HOME/.dbt
+          mkdir -p "$DBT_PROFILES_DIR"
           {
             echo "exercise_sustainability:"
             echo "  target: prod"
@@ -39,9 +41,13 @@ jobs:
             echo "      database: ANALYTICS_PROD"
             echo "      schema: prod"
             echo "      threads: 4"
-          } > $HOME/.dbt/profiles.yml
-          echo "Generated profiles.yml:"
-          cat $HOME/.dbt/profiles.yml
+          } > "$DBT_PROFILES_DIR/profiles.yml"
+          echo "Generated profiles.yml at $DBT_PROFILES_DIR/profiles.yml:"
+          cat "$DBT_PROFILES_DIR/profiles.yml"
+
+      - name: dbt debug (sanity check)
+        working-directory: ./dbt
+        run: dbt debug
 
       - name: Generate docs
         working-directory: ./dbt
