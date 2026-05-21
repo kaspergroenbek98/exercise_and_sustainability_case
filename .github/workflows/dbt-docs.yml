@@ -24,22 +24,24 @@ jobs:
 
       - name: Write profiles.yml
         run: |
-          mkdir -p ~/.dbt
-          cat > ~/.dbt/profiles.yml <<EOF
-          exercise_sustainability:
-            target: prod
-            outputs:
-              prod:
-                type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: PC_DBT_ROLE
-                warehouse: TRANSFORM_WH
-                database: ANALYTICS_PROD
-                schema: prod
-                threads: 4
-          EOF
+          mkdir -p $HOME/.dbt
+          {
+            echo "exercise_sustainability:"
+            echo "  target: prod"
+            echo "  outputs:"
+            echo "    prod:"
+            echo "      type: snowflake"
+            echo "      account: ${{ secrets.SNOWFLAKE_ACCOUNT }}"
+            echo "      user: ${{ secrets.SNOWFLAKE_USER }}"
+            echo "      password: ${{ secrets.SNOWFLAKE_PASSWORD }}"
+            echo "      role: PC_DBT_ROLE"
+            echo "      warehouse: TRANSFORM_WH"
+            echo "      database: ANALYTICS_PROD"
+            echo "      schema: prod"
+            echo "      threads: 4"
+          } > $HOME/.dbt/profiles.yml
+          echo "Generated profiles.yml:"
+          cat $HOME/.dbt/profiles.yml
 
       - name: Generate docs
         working-directory: ./dbt
