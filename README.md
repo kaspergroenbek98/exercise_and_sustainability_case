@@ -59,7 +59,7 @@ MARTS (tables)
 ```
 
 ## dbt docs
-dbt docs for the production environment can be accessed here from this repo's [Github Pages]([https://www.genome.gov/](https://kaspergroenbek98.github.io/exercise_and_sustainability_case/)).
+dbt docs for the production environment can be accessed here from this repo's Github Pages: [https://kaspergroenbek98.github.io/exercise_and_sustainability_case/](https://kaspergroenbek98.github.io/exercise_and_sustainability_case/).
 
 ## Presentation .ppt
 The presentation PowerPoint can be found in the folder **presentation/**
