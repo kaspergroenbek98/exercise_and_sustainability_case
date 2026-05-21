@@ -12,10 +12,25 @@ faostat_area_code,faostat_area_name,reason
 5206,Central America,Sub-continental aggregate
 5207,South America,Sub-continental aggregate
 5300,Asia,Continental aggregate
+5301,Central Asia,Sub-continental aggregate
+5302,Eastern Asia,Sub-continental aggregate
+5303,Southern Asia,Sub-continental aggregate
+5304,South-eastern Asia,Sub-continental aggregate
+5305,Western Asia,Sub-continental aggregate
 5400,Europe,Continental aggregate
-5401,European Union (27),Political-economic aggregate (overlaps members)
+5401,Eastern Europe,Sub-continental aggregate
+5402,Northern Europe,Sub-continental aggregate
+5403,Southern Europe,Sub-continental aggregate
+5404,Western Europe,Sub-continental aggregate
 5500,Oceania,Continental aggregate
-5707,Least Developed Countries,Development-status aggregate
-5803,Low Income Food Deficit Countries,Development-status aggregate
-5815,Net Food Importing Developing Countries,Development-status aggregate
+5501,Australia and New Zealand,Sub-continental aggregate
+5502,Melanesia,Sub-continental aggregate
+5503,Micronesia,Sub-continental aggregate
+5504,Polynesia,Sub-continental aggregate
+5707,European Union (27),Political-economic aggregate (overlaps members)
+5801,Least Developed Countries,Development-status aggregate
+5802,Land Locked Developing Countries,Development-status aggregate
+5803,Small Island Developing States,Development-status aggregate
+5815,Low Income Food Deficit Countries,Development-status aggregate
+5817,Net Food Importing Developing Countries,Development-status aggregate
 351,China,Aggregate of mainland + Taiwan + Hong Kong + Macau; mainland is area 41
