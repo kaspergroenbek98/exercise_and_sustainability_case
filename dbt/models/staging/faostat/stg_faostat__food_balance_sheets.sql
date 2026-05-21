@@ -32,8 +32,10 @@ renamed as (
 filtered as (
     select *
     from renamed
-    where item_code    = '2901'                              -- Grand Total
-      and element_code in ('664', '511')                     -- kcal supply, population
+    where
+        -- kcal supply at the Grand Total (item 2901)
+        (element_code = '664' and item_code = '2901')
+        -- population (item 2501 in FAOSTAT FBS)
+     or (element_code = '511' and item_code = '2501')
 )
-
 select * from filtered
