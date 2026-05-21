@@ -48,7 +48,7 @@ STAGING (views)
   ├── stg_faostat__food_balance_sheets        | filter to element 664 (kcal) + 511 (population), item 2901, type-cast, strip M49 apostrophe
   └── stg_google_health__daily_activity       | passthrough + type casts
 
-INTERMEDIATE (tables)
+INTERMEDIATE (views)
   ├── int_country_year_kcal_supply            | one row per (iso/area, year) with kcal_per_capita_per_day + population
   ├── int_world_kcal_baseline                 | one-row table: world population-weighted avg kcal/cap/day for the latest available year
   └── int_personal_day_matched_country        | cross-join match: closest country-year per personal day by kcal
@@ -58,48 +58,8 @@ MARTS (tables)
   └── fct_personal_vs_world                   | Google Health date + match + baseline + sustainability class
 ```
 
-### Layering rationale
+## dbt docs
+dbt docs for the production environment can be accessed here from this repo's [Github Pages]([https://www.genome.gov/](https://kaspergroenbek98.github.io/exercise_and_sustainability_case/)).
 
-**Staging is views.** Renames, casts, light filters. The FAOSTAT staging carries
-both kcal and population because both come from the same source table; splitting
-them into two staging views just to be one-element-per-model would add files
-without separating real concerns.
-
-**Intermediate is views.** Nothing is too expensive in this setup, I wouild consider
-materializing the int_personal_day_matched_country model as table at scale, e.g.,
-more subjects than just me, because it grows exponentially. Otherwise, both
-XS warehouses and views are fine for this setup, but performance drops downstream
-would a pointer to consider optimizations and table materialization if run at bulk.
-Otherwise, incrementally/CDC would work beautifully for this type of data.
-
-**Marts are tables.** They're the BI/analytics end-user facing surface. Two marts because the
-grain differs (country-year vs personal-day); forcing them onto one mart would
-either explode the country-year fact to personal-day grain or hide one inside a
-JSON column. These are tables for performance, incremental is a candidate too in a mature
-prod setup.
-
-### The closest-match join, by design
-
-`int_personal_day_matched_country` is a cross join between personal days and
-country-years, keyed by absolute kcal difference, with `ROW_NUMBER` keeping the
-single closest match per day.
-
-- **Why cross-join not temporal join:** FAOSTAT publishes through 2023. Personal
-  data starts in 2024. A temporal join would orphan every personal row. The
-  cross-join asks a different question: "which country-year had a supply closest
-  to today's burn?", which maps directly to the slide.
-- **Size at current scale:** ~870 personal days × ~2,800 country-years = ~2.4M
-  intermediate rows. Snowflake handles it on XS without complaint. If the
-  personal data grew to multi-user, replace the cross join with a binned lookup.
-
-### World average, population-weighted
-
-`int_world_kcal_baseline` is a single-row table. Two design choices:
-
-1. **Population-weighted, not unweighted.** Country averages without population
-   weights treat tiny countries (Bhutan, Iceland) the same as China and India.
-   That's the wrong shape for a "world average". The weight comes from FAOSTAT's
-   own population element (511) — consistent with the kcal data being weighted.
-2. **Latest available year, not the personal day's year.** The personal data is
-   2024+, FAOSTAT stops at 2023. There's no aligned year. Pinning the baseline
-   to the latest available FAOSTAT year is the honest move; the slide narrates it.
+## Presentation .ppt
+The presentation PowerPoint can be found in the folder **presentation/**
