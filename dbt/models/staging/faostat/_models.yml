@@ -3,9 +3,10 @@ version: 2
 models:
   - name: stg_faostat__food_balance_sheets
     description: >
-      Long-format FAOSTAT rows, filtered to the two elements the project uses
-      (664 kcal supply, 511 population) at item 2901 (Grand Total). M49 country
-      code is stripped of its leading apostrophe. ~5,600 rows.
+      Long-format FAOSTAT rows, filtered to the two elements the project uses:
+      element 664 (kcal supply, kcal/capita/day) at item 2901 (Grand Total), and
+      element 511 (population, 1000 persons) at item 2501 (Population). M49
+      country code is stripped of its leading apostrophe. ~5,600 rows.
     columns:
       - name: area_code
         description: FAO numeric area code. Used to filter out aggregates via the faostat_area_exclusions seed.
@@ -18,11 +19,13 @@ models:
       - name: m49_code
         description: UN M49 numeric country code, apostrophe-stripped. Carried for future ISO joining.
       - name: item_code
-        description: FAO item code. Always 2901 (Grand Total) after filtering.
+        description: >
+          FAO item code. After filtering: 2901 (Grand Total, for kcal supply)
+          or 2501 (Population, for the population element).
         data_tests:
           - accepted_values:
               arguments:
-                values: ['2901']
+                values: ['2901', '2501']
       - name: element_code
         description: FAO element code. Either 664 (kcal supply) or 511 (population).
         data_tests:
@@ -45,3 +48,5 @@ models:
             E: Estimated value - FAO estimation based on models or related data.
             F: Forecast value - A projected figure for the current or upcoming year.
             I: Value imputed - Calculated by FAO or another receiving agency using related
+            X: Figure from external organization.
+            (blank): Direct national report.

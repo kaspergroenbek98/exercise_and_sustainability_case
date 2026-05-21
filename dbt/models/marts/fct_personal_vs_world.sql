@@ -8,7 +8,7 @@ with personal as (
     select * from {{ ref('stg_google_health__daily_activity') }}
 ),
 
-matched as (
+matched_ as (
     select * from {{ ref('int_personal_day_matched_country') }}
 ),
 
@@ -50,5 +50,5 @@ select
     end as world_sustainability_class
 
 from personal p
-left join matched m on p.activity_date = m.activity_date
+left join matched_ m on p.activity_date = m.activity_date
 cross join baseline b
